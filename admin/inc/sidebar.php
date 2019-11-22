@@ -1,3 +1,10 @@
+<?php require_once '../function.php' ;
+
+xiu_current_user ();
+
+
+?>
+
 <div class="aside">
     <div class="profile">
       <img class="avatar" src="/static/uploads/avatar.jpg">

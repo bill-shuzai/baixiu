@@ -1,6 +1,9 @@
+
 <?php 
 
   require_once '../config.php';
+
+  session_start();
 
   function login(){
     if(empty($_POST['email'])){
@@ -14,14 +17,38 @@
     }
 
     $email=$_POST['email'];
-    $password=$_POST['email'];
+    $password=$_POST['password'];
 
-    $conn=mysqli_connect(XIU_DB_HOST,XIU_DB_USER,XIU_DB_PASS,XIU_DB_TABLE);
+    $conn=mysqli_connect(XIU_DB_HOST,XIU_DB_USER,XIU_DB_PASS,XIU_DB_NAME);
     if(!$conn){
       exit('<h1>数据库连接失败<h1>');
     }
 
-    $query=mysqli_query($conn,'');
+    $query=mysqli_query($conn,"SELECT * from users where email ='{$email}' limit 1;");
+    
+    if (!$query) {
+      $GLOBALS['message']='查询失败请重试！';
+      return;
+    }
+
+    $user=mysqli_fetch_assoc($query);
+
+    //var_dump($users['password']);
+
+    if(!$user){
+      $GLOBALS['message']='邮箱不匹配';
+      return;
+    }
+
+    if($user['password']!==$password){
+      $GLOBALS['message']='密码不匹配';
+      return;
+    }
+
+    $_SESSION['current_login_user']=$user;
+
+
+    header('Location:/admin/');
 
   };
 
@@ -40,6 +67,7 @@
   <meta charset="utf-8">
   <title>Sign in &laquo; Admin</title>
   <link rel="stylesheet" href="/static/assets/vendors/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="/static/assets/vendors/nprogress/nprogress.css">
   <link rel="stylesheet" href="/static/assets/css/admin.css">
 </head>
 <body>
@@ -63,5 +91,83 @@
       <button class="btn btn-primary btn-block" href="index.php">登 录</button>
     </form>
   </div>
+  <script src="/static/assets/vendors/jquery/jquery.js"></script>
+  <script type="text/javascript" src="/static/assets/vendors/nprogress/nprogress.js"></script>
+  <script>
+    $(function($){
+      $('#email').on('blur',function(){
+          //获取邮箱，验证邮箱
+  
+          var value=$(this).val();
+          var reg=/[0-9a-zA-Z_.-]+[@][0-9a-zA-Z_.-]+([.][a-zA-z]+){1,2}/;
+          
+          //
+          if (!value||!reg.test(value)) {
+            $('.avatar').fadeOut(function(){
+              $(this).attr('src','/static/assets/img/default.png').on('load',function(){
+                $(this).fadeIn();
+              })
+            });
+            return;
+          }
+
+          $.get('/admin/api/avatar.php',{ email: value },function(res){
+            if(!res){
+              return;
+            }
+            $('.avatar').fadeOut(function(){
+                $(this).attr('src',res).on('load',function(){
+                  $(this).fadeIn();
+                });
+            });
+          });
+        
+
+
+
+
+
+      })
+    });
+
+
+
+
+
+
+
+
+    // $('#email').on('blur',function(){
+    //     var value=$(this).val();
+    //     var reg=/[0-9a-zA-Z_.-]+[@][0-9a-zA-Z_.-]+([.][a-zA-z]+){1,2}/;
+    //     if (!value || !reg.test(value)){
+    //       //$(".avatar").attr('src','/static/assets/img/default.png');
+    //       if ($(".avatar").attr('src')=='/static/assets/img/default.png') return;
+
+    //       $(".avatar").fadeOut(function(){
+    //         $(this).attr('src','/static/assets/img/default.png').on('load',function(){
+    //               $(this).fadeIn();
+    //             });
+          
+
+    //       });
+
+    //       return;
+    //     } //把逻辑写死
+    //     //用户输入了一个合理的邮箱地址
+    //     //获取这个邮箱对应的头像地址、展示到上面的img元素上
+
+    //     $.get('api/avatar.php',{ email: value },function(res){
+    //         //console.log(res);
+    //         if (!res) return;
+    //         //$(".avatar").attr('src',res);
+    //         $(".avatar").fadeOut(function(){
+    //             $(this).attr('src',res).on('load',function(){
+    //               $(this).fadeIn();
+    //             });
+    //         });
+    //     });
+
+  </script>
 </body>
 </html>

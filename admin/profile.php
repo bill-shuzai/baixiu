@@ -1,3 +1,10 @@
+<?php 
+
+  require_once '../function.php';
+
+  xiu_current_user();
+
+ ?> 
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>

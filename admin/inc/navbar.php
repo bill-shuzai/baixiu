@@ -1,3 +1,10 @@
+<?php require_once '../function.php' ;
+
+xiu_current_user ();
+
+
+?>
+
 <nav class="navbar">
       <button class="btn btn-default navbar-btn fa fa-bars"></button>
       <ul class="nav navbar-nav navbar-right">
