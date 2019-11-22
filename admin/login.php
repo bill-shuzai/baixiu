@@ -71,6 +71,7 @@
   <link rel="stylesheet" href="/static/assets/css/admin.css">
 </head>
 <body>
+  hello,test
   <div class="login">
     <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method='POST'; class="login-wrap" novalidate autocomplete="off">
       <img class="avatar" src="/static/assets/img/default.png">
