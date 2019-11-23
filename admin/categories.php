@@ -2,6 +2,43 @@
 
   require_once '../function.php';
 
+  function add_category(){
+    if (empty($_POST['name'])) {
+      $GLOBALS['message']='请输入名称！';
+      return;
+    }
+    if (empty($_POST['slug'])) {
+      $GLOBALS['message']='请输入slug!';
+      return;
+    }
+
+    $name=$_POST['name'];
+    $slug=$_POST['slug'];
+
+    $rows=xiu_fetch_excute("insert into categories values(null,'{$name}','{$slug}');");
+
+    
+
+  };
+
+
+
+
+
+
+
+
+
+
+  if ($_SERVER['REQUEST_METHOD']==='POST'){
+   add_category();
+ }
+
+
+
+  $categories=xiu_fetch_all('select * from categories;');
+
+
   xiu_current_user();
 
  ?>
@@ -27,12 +64,14 @@
         <h1>分类目录</h1>
       </div>
       <!-- 有错误信息时展示 -->
-      <!-- <div class="alert alert-danger">
-        <strong>错误！</strong>发生XXX错误
-      </div> -->
+      <?php if (isset($message)): ?>
+        <div class="alert alert-danger">
+        <strong>错误！</strong><?php echo $message ?>
+      </div>
+      <?php endif ?>
       <div class="row">
         <div class="col-md-4">
-          <form>
+          <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" novalidate  autocomplete='off' >
             <h2>添加新分类目录</h2>
             <div class="form-group">
               <label for="name">名称</label>
@@ -63,33 +102,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+             <?php foreach ($categories as $item): ?>
+                <tr>
                 <td class="text-center"><input type="checkbox"></td>
-                <td>未分类</td>
-                <td>uncategorized</td>
+                <td><?php echo $item['name']; ?></td>
+                <td><?php echo $item['slug'] ?></td>
                 <td class="text-center">
                   <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+                  <a href="/admin/categories-delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-xs">删除</a>
                 </td>
               </tr>
-              <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td>未分类</td>
-                <td>uncategorized</td>
-                <td class="text-center">
-                  <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td>未分类</td>
-                <td>uncategorized</td>
-                <td class="text-center">
-                  <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-                </td>
-              </tr>
+             <?php endforeach ?>
+            
             </tbody>
           </table>
         </div>

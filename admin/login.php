@@ -59,6 +59,10 @@
   }
 
 
+  if ($_SERVER['REQUEST_METHOD']==='GET'&& isset($_GET['action']) && $_GET['action']==='logout') {
+    unset($_SESSION['current_login_user']);
+  }
+
  ?>
 
 <!DOCTYPE html>
@@ -68,12 +72,12 @@
   <title>Sign in &laquo; Admin</title>
   <link rel="stylesheet" href="/static/assets/vendors/bootstrap/css/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="/static/assets/vendors/nprogress/nprogress.css">
+  <link rel="stylesheet" type="text/css" href="/static/assets/vendors/animate/animate.css">
   <link rel="stylesheet" href="/static/assets/css/admin.css">
 </head>
 <body>
-  hello,test
-  <div class="login">
-    <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method='POST'; class="login-wrap" novalidate autocomplete="off">
+  <div class="login ">
+    <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method='POST'; class="login-wrap <?php echo isset($message)? 'animated shake':'' ?>" novalidate autocomplete="off">
       <img class="avatar" src="/static/assets/img/default.png">
       <!-- 有错误信息时展示 -->
       <?php if (isset($message)): ?>
@@ -83,7 +87,7 @@
       <?php endif ?>
       <div class="form-group">
         <label for="email" class="sr-only">邮箱</label>
-        <input id="email" name="email" type="email" class="form-control" placeholder="邮箱" autofocus>
+        <input id="email" name="email" type="email" class="form-control" placeholder="邮箱" value="<?php echo $_POST['email'] ?>" autofocus>
       </div>
       <div class="form-group">
         <label for="password" class="sr-only">密码</label>
@@ -104,7 +108,10 @@
           
           //
           if (!value||!reg.test(value)) {
-            $('.avatar').fadeOut(function(){
+            if ($('.avatar').attr('src')==='/static/assets/img/default.png') {
+             return;
+            }
+             $('.avatar').fadeOut(function(){
               $(this).attr('src','/static/assets/img/default.png').on('load',function(){
                 $(this).fadeIn();
               })
@@ -122,12 +129,6 @@
                 });
             });
           });
-        
-
-
-
-
-
       })
     });
 
@@ -138,36 +139,7 @@
 
 
 
-    // $('#email').on('blur',function(){
-    //     var value=$(this).val();
-    //     var reg=/[0-9a-zA-Z_.-]+[@][0-9a-zA-Z_.-]+([.][a-zA-z]+){1,2}/;
-    //     if (!value || !reg.test(value)){
-    //       //$(".avatar").attr('src','/static/assets/img/default.png');
-    //       if ($(".avatar").attr('src')=='/static/assets/img/default.png') return;
-
-    //       $(".avatar").fadeOut(function(){
-    //         $(this).attr('src','/static/assets/img/default.png').on('load',function(){
-    //               $(this).fadeIn();
-    //             });
-          
-
-    //       });
-
-    //       return;
-    //     } //把逻辑写死
-    //     //用户输入了一个合理的邮箱地址
-    //     //获取这个邮箱对应的头像地址、展示到上面的img元素上
-
-    //     $.get('api/avatar.php',{ email: value },function(res){
-    //         //console.log(res);
-    //         if (!res) return;
-    //         //$(".avatar").attr('src',res);
-    //         $(".avatar").fadeOut(function(){
-    //             $(this).attr('src',res).on('load',function(){
-    //               $(this).fadeIn();
-    //             });
-    //         });
-    //     });
+    
 
   </script>
 </body>
