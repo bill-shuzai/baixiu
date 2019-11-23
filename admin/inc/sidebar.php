@@ -1,14 +1,14 @@
 <?php require_once '../function.php' ;
 
-xiu_current_user ();
+$user=xiu_current_user ();
 
 
 ?>
 
 <div class="aside">
     <div class="profile">
-      <img class="avatar" src="/static/uploads/avatar.jpg">
-      <h3 class="name">布头儿</h3>
+      <img class="avatar" src="<?php echo $user['avatar']?$user['avatar']:'/static/uploads/avatar.jpg'; ?>">
+      <h3 class="name"><?php echo $user['nickname']; ?></h3>
     </div>
     <ul class="nav">
       <li  <?php echo $_SERVER['PHP_SELF']==='/admin/index.php'? 'class="active"' : '' ?>>

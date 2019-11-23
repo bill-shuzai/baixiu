@@ -8,7 +8,7 @@ if($_SERVER['REQUEST_METHOD']!=='GET'){
 
 $delete_categories_id=$_GET['id'];
 
-$rows=xiu_fetch_excute("delete from categories where id='{$delete_categories_id}';");
+$rows=xiu_fetch_excute('delete from categories where id in ('.$delete_categories_id.');');
 
 
 if(!$rows){
